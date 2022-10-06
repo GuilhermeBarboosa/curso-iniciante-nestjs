@@ -1,33 +1,38 @@
 import { Livros } from './../model/livros.model';
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class LivrosService {
-  listLivros: Livros[] = [
-  //   new Livros('LIV003', 'Livro ABC', 5.0),
-  //   new Livros('LIV004', 'Livro XYZ', 10.0),
-  //   new Livros('LIV007', 'Livro Amarelo', 15.0),
-   ];
+export class LivrosService { 
+   constructor(
+    @InjectModel(Livros)
+    private livroModel: typeof Livros)
+    {}
 
-  criarLivros(livros: Livros) {
-    livros.id = 100;
-    this.listLivros.push(livros);
+  async criarLivros(livro: Livros): Promise<Livros> {
+    return this.livroModel.create(livro);
   }
 
-  atualizarLivros(livros: Livros) {
-    return livros;
+  async atualizarLivros(livro: Livros): Promise<[number, Livros[]]> {
+    return this.livroModel.update(livro, {
+      where:{
+        id: livro.id
+      }
+    });
   }
 
-  obterTodos(): Livros[] {
-    return this.listLivros;
+  async obterTodos(): Promise<Livros[]> {
+    return this.livroModel.findAll();
   }
 
-  procurarPorId(id: number): Livros {
-    return this.listLivros[id];
+  async procurarPorId(id: number): Promise<Livros> {
+    return this.livroModel.findByPk(id);
   }
 
-  deletaLivros(id: number) {
-    this.listLivros.pop();
+  async deletaLivros(id: number) {
+    const livro: Livros = await this.procurarPorId(id);
+    livro.destroy();
   }
 }

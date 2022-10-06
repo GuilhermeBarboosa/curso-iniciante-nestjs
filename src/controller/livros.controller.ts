@@ -10,34 +10,34 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ExecException } from 'child_process';
 
 @Controller('livros')
 export class LivrosController {
-
- constructor(private livrosService: LivrosService){}
+  constructor(private livrosService: LivrosService) {}
 
   @Get()
-  getAll(): Livros[] {
+  async getAll(): Promise<Livros[]> {
     return this.livrosService.obterTodos();
   }
 
   @Get(':id')
-  getById(@Param() livros): Livros {
+  async getById(@Param() livros): Promise<Livros> {
     return this.livrosService.procurarPorId(livros.id);
   }
 
   @Post()
-  create(@Body() livros: Livros){
-    this.livrosService.criarLivros(livros);
+  async create(@Body() livros: Livros) {
+    return this.livrosService.criarLivros(livros);
   }
 
   @Put()
-  update(@Body() livros: Livros) {
+  async update(@Body() livros: Livros) {
     this.livrosService.atualizarLivros(livros);
   }
 
   @Delete(':id')
-  delete(@Param() livros){
+  async delete(@Param() livros) {
     this.livrosService.deletaLivros(livros.id);
   }
 }
