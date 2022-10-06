@@ -5,15 +5,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Livros } from './model/livros.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'gui',
-      password: 'password',
+      username: process.env.USUARIO_DEV,
+      password: process.env.SENHA_DEV,
       database: 'livraria',
       autoLoadModels: true,
       synchronize: true,
