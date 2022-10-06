@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export class Produto {
+export class Livros {
   id?: number;
   codigo: string;
   nome: string;
